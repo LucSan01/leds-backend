@@ -15,15 +15,15 @@ export const signUp = async (
 ) => {
   try {
     const { firstName, lastName, email, password, phoneNo } =
-      req.body as SignUpPayload;
+      req.body;
 
     let user = await User.findOne({ email });
-    if (user) {
-      return next(new CustomError("User already exist", 409));
-    }
-    const newUser = new User({ firstName, lastName, email, password, phoneNo });
+    if (user) return next(new CustomError("User already exist", 409));
+    
+    const newUser = await User.create({ firstName, lastName, email, password, phoneNo });
     await newUser.save();
     res.status(201).json({ message: "Registration succefull" });
+    res.redirect("/login")
   } catch (error) {
     next(error);
     console.log(error);
