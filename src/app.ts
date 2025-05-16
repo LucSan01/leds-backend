@@ -1,13 +1,34 @@
 import express from "express";
-import { config } from "dotenv";
 import errorHandlerFunc from "./middleware/errorHandler";
-import cors from "cors"
+import cors, { CorsOptions } from "cors"
 
-config({
-  path: "./config.env",
-});
+
 
 export const app = express();
+
+const allowedOrigins: string[]=[
+  process.env.FRONTEND_URI_1!,
+  process.env.FRONTEND_URI_2!,
+
+]
+const corsOptions: CorsOptions={
+  origin:(origin, callback)=>{
+
+    if(!origin || allowedOrigins.includes(origin)){
+      callback(null, true)
+    }else{
+      callback(new Error("Not allowed by CORS"))
+    }
+  }
+}
+
+// middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+app.use(cors(corsOptions));
+
 
 app.get("/", (req, res, next) => {
   res.send("home page");
@@ -15,13 +36,8 @@ app.get("/", (req, res, next) => {
 
 // user routes
 import user from "./routes/user";
+import dotenv from 'dotenv';
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors({
-  origin: "https://leds-gray.vercel.app/",
-  credentials: true
-}))
 app.use("/api/user", user);
 
 // https://leds-backend.onrender.com

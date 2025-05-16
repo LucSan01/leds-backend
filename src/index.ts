@@ -1,12 +1,20 @@
+import dotenv from "dotenv";
+
+dotenv.config();
+console.log("✅ Loaded MONGO_URI:", process.env.MONGO_URI);
+
 import { connectDB } from "./data/database";
 import { app } from "./app";
 
-const port = process.env.PORT || 5000;
+
+const PORT = process.env.PORT || 5000;
 
 connectDB();
 
-app.listen(port, () => {
+// const PORT =process.env.PORT || 5000
+
+app.listen(PORT, () => {
   console.log(
-    `server listening on port: ${port}, in ${process.env.NODE_ENV} NODE`
+    `server listening on port: ${PORT}, in ${process.env.NODE_ENV} NODE`
   );
 });
