@@ -1,11 +1,9 @@
 import dotenv from "dotenv";
 
 dotenv.config();
-console.log("✅ Loaded MONGO_URI:", process.env.MONGO_URI);
 
 import { connectDB } from "./data/database";
 import { app } from "./app";
-
 
 const PORT = process.env.PORT || 5000;
 

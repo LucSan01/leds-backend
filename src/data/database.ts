@@ -11,7 +11,6 @@ if(!uri){
     const  conn  = await mongoose.connect(uri, {
       dbName: "lucsanEliteDynamicsDB",
     });
-
     console.log(`Server connected to database ${conn.connection.host}`);
   } catch (error) {
     console.log("Error found", error);

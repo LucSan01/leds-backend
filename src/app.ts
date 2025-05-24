@@ -1,15 +1,13 @@
 import express from "express";
-import errorHandlerFunc from "./middleware/errorHandler";
-import cors, { CorsOptions } from "cors"
-
-
+import {errorHandlerFunc} from "./middleware/errorHandler";
+import cors, { CorsOptions } from "cors";
+import cookieParser from "cookie-parser"
 
 export const app = express();
 
 const allowedOrigins: string[]=[
   process.env.FRONTEND_URI_1!,
   process.env.FRONTEND_URI_2!,
-
 ]
 const corsOptions: CorsOptions={
   origin:(origin, callback)=>{
@@ -25,10 +23,8 @@ const corsOptions: CorsOptions={
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-
+app.use(cookieParser());
 app.use(cors(corsOptions));
-
 
 app.get("/", (req, res, next) => {
   res.send("home page");
@@ -36,7 +32,6 @@ app.get("/", (req, res, next) => {
 
 // user routes
 import user from "./routes/user";
-import dotenv from 'dotenv';
 
 app.use("/api/user", user);
 
