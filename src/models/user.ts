@@ -32,7 +32,7 @@ const schema = new mongoose.Schema<AllUsers, {}, UserMethods>({
   },
   role: {
     type: String,
-    enum: ["admin", "user"],
+    enum: ["admin", "student", "user"],
     default: "user",
   },
   otp: Number,

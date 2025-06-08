@@ -7,7 +7,7 @@ export interface AllUsers {  firstName: string;
   email: string;
   phoneNo: number;
   password: string;
-  role: "admin" | "user";
+  role: "admin" | "user" | "guest";
   otp?: Number;
   otp_expire?: Date;
 }

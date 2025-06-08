@@ -1,7 +1,7 @@
 import express from "express";
 import {errorHandlerFunc} from "./middleware/errorHandler";
-import cors, { CorsOptions } from "cors";
-import cookieParser from "cookie-parser"
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 export const app = express();
 
@@ -16,8 +16,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    credentials: true,
-    methods: ["GET", "POST", "DELETE"],
     origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
@@ -25,6 +23,7 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
+    credentials: true,
   })
 );
 
@@ -37,6 +36,5 @@ import user from "./routes/user";
 
 app.use("/api/user", user);
 
-// https://leds-backend.onrender.com
 
 app.use(errorHandlerFunc);

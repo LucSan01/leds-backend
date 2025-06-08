@@ -8,37 +8,35 @@ interface LoginRequest {
   email: string;
   password: string;
 }
+
+interface LoginResponse {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+  };
+}
 export const login = async (
   req: Request<{}, {}, LoginRequest>,
   res: Response,
   next: NextFunction
 ): Promise<any> => {
   const { email, password } = req.body;
+  if (!email || !password)
+    return next(
+      new CustomError("Please enter your valid email and password", 400)
+    );
 
-  try {
-    const user = await User.findOne({ email }).select("+password");
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "Invalid email and password",
-        redirectTo: "/signup",
-      });
-    }
-    if (!email || !password)
-      return next(
-        new CustomError("Please enter your valid email and password", 400)
-      );
+  const user = await User.findOne({ email }).select("+password");
+  if (!user) return next(new CustomError("Invalid email and password", 404));
 
-    const isMatched = await user.comparePassword(password);
-    if (!isMatched) {
-      return next(new CustomError("Incorrect email or password"));
-    }
-
-    sendToken(user, res, "Login successful", 200);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ success: false, message: "Server error" });
+  const isMatched = await user.comparePassword(password);
+  if (!isMatched) {
+    return next(new CustomError("Incorrect email or password"));
   }
+
+  sendToken(user, res, "Login successful", 200);
+  return;
 };
 
 //sign up logic

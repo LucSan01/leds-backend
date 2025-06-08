@@ -12,7 +12,15 @@ export const sendToken = (
   res
     .status(statusCode)
     .cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
       expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+      sameSite: "lax",
     })
-    .json({ success: true, message: "Login successful "});
+    .json({
+      success: true,
+      message,
+      token,
+      role: user.role, // ✅ include role here
+    });
 };
