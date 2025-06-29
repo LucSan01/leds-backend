@@ -26,9 +26,10 @@ app.use(
   })
 );
 
-app.get("/", (req, res, next) => {
-  res.send("https://leds-gray.vercel.app");
+app.get("/", (req, res) => {
+  res.redirect("https://leds-gray.vercel.app");
 });
+
 
 // user routes
 import user from "./routes/user";
