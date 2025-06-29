@@ -27,7 +27,7 @@ app.use(
 );
 
 app.get("/", (req, res, next) => {
-  res.send("home page");
+  res.send("https://leds-gray.vercel.app");
 });
 
 // user routes
