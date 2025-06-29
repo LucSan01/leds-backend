@@ -5,10 +5,7 @@ import cookieParser from "cookie-parser";
 
 export const app = express();
 
-const allowedOrigins = [
-  process.env.FRONTEND_URI_1,
-  process.env.FRONTEND_URI_2,
-].filter(Boolean);
+const allowedOrigins = process.env.CORS_ORIGINS?.split(",") || [];
 
 // middleware
 app.use(express.json());
@@ -16,11 +13,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      const vercelPreviewRegex = /^https:\/\/.*--leds-gray\.vercel\.app$/;
+      if (allowedOrigins.includes(origin) || vercelPreviewRegex.test(origin)) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        callback(new Error(`CORS POLICY: origin ${origin} Not allowed`));
       }
     },
     credentials: true,
