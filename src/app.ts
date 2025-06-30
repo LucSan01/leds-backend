@@ -16,14 +16,18 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-      const vercelPreviewRegex = /^https:\/\/.*--leds-gray\.vercel\.app$/;
-      
-      if (allowedOrigins.includes(origin) || vercelPreviewRegex.test(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error(`CORS POLICY: origin ${origin} Not allowed`));
-      }
+          
+     if (!origin || allowedOrigins.includes(origin)) {
+       return callback(null, true);
+     }
+     const vercelPreviewRegex = /^https:\/\/.*--leds.*\.vercel\.app$/;
+
+     if (vercelPreviewRegex.test(origin)) {
+       callback(null, true);
+     } else {
+       callback(new Error(`CORS POLICY: origin ${origin} Not allowed`));
+     }
+     return callback(new Error(`CORS POLICY: origin ${origin} not allowed`));
     },
     credentials: true,
   })
