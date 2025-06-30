@@ -15,12 +15,14 @@ export const sendToken = (
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-      sameSite: "lax",
+      sameSite: "none",
     })
     .json({
       success: true,
       message,
-      token,
-      role: user.role, // ✅ include role here
+      user: {
+        id: user._id,
+        email: user.email,
+      }, // ✅ include role here
     });
 };

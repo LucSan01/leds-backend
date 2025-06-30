@@ -82,7 +82,9 @@ export const logout = asyncError(
 export const getMyProfile = asyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const user = await User.findById(req.user._id);
-
+if (!user) {
+  return res.status(404).json({ success: false, message: "User not found" });
+}
     res.status(200).json({
       success: true,
       user,
