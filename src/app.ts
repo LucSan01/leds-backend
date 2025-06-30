@@ -3,7 +3,9 @@ import {errorHandlerFunc} from "./middleware/errorHandler";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
+
 export const app = express();
+
 
 const allowedOrigins = process.env.CORS_ORIGINS?.split(",") || [];
 
@@ -16,6 +18,7 @@ app.use(
     origin: function (origin, callback) {
       if (!origin) return callback(null, true);
       const vercelPreviewRegex = /^https:\/\/.*--leds-gray\.vercel\.app$/;
+      
       if (allowedOrigins.includes(origin) || vercelPreviewRegex.test(origin)) {
         callback(null, true);
       } else {
@@ -26,9 +29,6 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => {
-  res.redirect("https://leds-gray.vercel.app");
-});
 
 
 // user routes
