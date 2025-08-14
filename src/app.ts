@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import { errorHandlerFunc } from "./middleware/errorHandler";
 import cors from "cors";
@@ -5,15 +8,15 @@ import cookieParser from "cookie-parser";
 
 export const app = express();
 
-const allowedOrigins = [
-  "http://localhost:3000", // dev frontend
-  "https://leds-gray.vercel.app", // prod frontend
-];
-// middleware
+const allowedOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(",")
+  : [];
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin) return callback(null, true); // allow non-browser requests
+      if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
@@ -22,6 +25,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

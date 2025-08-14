@@ -4,5 +4,6 @@ declare namespace Nodejs {
     MONGO_URI: string;
     FRONTEND_URI_1: string;
     FRONTEND_URI_2: string;
+    CORS_ORIGINS: string;
   }
 }
