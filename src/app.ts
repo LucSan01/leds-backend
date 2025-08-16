@@ -1,5 +1,7 @@
-import dotenv from "dotenv";
-dotenv.config();
+import { config } from "dotenv";
+config({
+  path: "./data/config.env",
+});
 
 import express from "express";
 import { errorHandlerFunc } from "./middleware/errorHandler";
@@ -14,6 +16,8 @@ const allowedOrigins = process.env.CORS_ORIGINS
 
 app.use(
   cors({
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
     origin: (origin, callback) => {
       if (!origin) return callback(null, true); // allow non-browser requests
       if (allowedOrigins.includes(origin)) {
@@ -22,7 +26,6 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true,
   })
 );
 
