@@ -3,42 +3,35 @@ config({
   path: "./data/config.env",
 });
 
-import express from "express";
+import express, { Response, Request, NextFunction } from "express";
 import { errorHandlerFunc } from "./middleware/errorHandler";
-import cors from "cors";
 import cookieParser from "cookie-parser";
 
 export const app = express();
 
-app.use(
-  cors({
-    origin: ["http://localhost:3000", "https://leds-gray.vercel.app"],
-    credentials: true,
-  })
-);
+const allowedOrigins = [
+  "https://leds-gray.vercel.app",
+  "http://localhost:3000",
+];
 
-// ✅ Load allowed origins from env
-// const allowedOrigins = process.env.CORS_ORIGINS
-//   ? process.env.CORS_ORIGINS.split(",").map((origin) => origin.trim())
-//   : [];
+app.use((req: Request, res: Response, next: NextFunction): void => {
+  const origin = req.headers.origin;
 
-// console.log("✅ Allowed Origins:", allowedOrigins);
+  if (origin && allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, x-Requested-With");
+  res.header("Access-Control-Allow-Credentials", "true");
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+  }
+  console.log("incoming request origin", req.headers.origin);
 
-// app.use(
-//   cors({
-//     origin: (origin, callback) => {
-//       if (!origin) return callback(null, true); // allow Postman / server-to-server
-//       if (allowedOrigins.includes(origin)) {
-//         callback(null, true);
-//       } else {
-//         console.warn("❌ CORS blocked:", origin);
-//         callback(new Error("Not allowed by CORS"));
-//       }
-//     },
-//     credentials: true, // allow cookies/authorization headers
-//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//   })
-// );
+  next();
+});
+
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
