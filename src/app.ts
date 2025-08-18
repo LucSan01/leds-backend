@@ -15,19 +15,19 @@ const allowedOrigins = [
 ];
 
 app.use((req: Request, res: Response, next: NextFunction): void => {
-  const origin = req.headers.origin;
+  const origin = req.headers.origin || "unknown origin";
+  console.log("incoming request origin", req.headers.origin);
 
   if (origin && allowedOrigins.includes(origin)) {
     res.header("Access-Control-Allow-Origin", origin);
   }
-  
+
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, x-Requested-With");
   res.header("Access-Control-Allow-Credentials", "true");
   if (req.method === "OPTIONS") {
     res.status(200).end();
   }
-  console.log("incoming request origin", req.headers.origin);
 
   next();
 });
