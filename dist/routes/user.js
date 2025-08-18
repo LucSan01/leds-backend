@@ -10,4 +10,15 @@ const router = express_1.default.Router();
 router.post("/login", user_1.login);
 router.post("/signup", user_1.signup);
 router.get("/userProfile", auth_1.isAuthenticated, user_1.getMyProfile);
+router.get("/logout", auth_1.isAuthenticated, user_1.logout);
+router.get("/check", auth_1.isAuthenticated, (req, res) => {
+    res.json({
+        success: true,
+        user: {
+            id: req.user._id,
+            email: req.user.email,
+            role: req.user.role,
+        },
+    });
+});
 exports.default = router;

@@ -20,6 +20,7 @@ app.use((req: Request, res: Response, next: NextFunction): void => {
   if (origin && allowedOrigins.includes(origin)) {
     res.header("Access-Control-Allow-Origin", origin);
   }
+  
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, x-Requested-With");
   res.header("Access-Control-Allow-Credentials", "true");

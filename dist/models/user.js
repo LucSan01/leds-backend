@@ -45,7 +45,7 @@ const schema = new mongoose_1.default.Schema({
     },
     role: {
         type: String,
-        enum: ["admin", "user"],
+        enum: ["admin", "student", "user"],
         default: "user",
     },
     otp: Number,

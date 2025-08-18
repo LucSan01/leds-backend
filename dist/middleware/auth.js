@@ -18,7 +18,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_1 = require("../models/user");
 const errorHandler_1 = require("./errorHandler");
 exports.isAuthenticated = (0, errorHandler_1.asyncError)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { token } = req.cookies;
+    const token = req.cookies.token;
     if (!token)
         return next(new CustomErr_1.CustomError("User not logged in", 401));
     //   the below decode the token if user is found  and get the id of the userr
