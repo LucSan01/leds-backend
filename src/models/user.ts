@@ -4,7 +4,11 @@ import bcrypt from "bcrypt";
 import { AllUsers, UserMethods } from "../types/User";
 import jwt from "jsonwebtoken";
 
-const schema = new mongoose.Schema<AllUsers, {}, UserMethods>({
+const schema = new mongoose.Schema<
+  AllUsers,
+  mongoose.Model<AllUsers, {}, UserMethods>,
+  UserMethods
+>({
   firstName: {
     type: String,
     required: [true, "Please enter your First Name"],
@@ -20,9 +24,12 @@ const schema = new mongoose.Schema<AllUsers, {}, UserMethods>({
     validate: validator.isEmail,
   },
   phoneNo: {
-    type: Number,
+    type: String,
     required: [true, "Please enter a valid number"],
-    minLength: [11, "Please enter 11 digite number"],
+    validate: {
+      validator: (v: string) => /^\d{11}$/.test(v),
+      message: "Please enter a valid 11-digit phone number",
+    },
   },
   password: {
     type: String,
@@ -58,11 +65,14 @@ schema.methods.generateToken = function () {
   // const secret = process.env.JWT_SECRET
   // console.log(secret);
   if (!process.env.JWT_SECRET) throw new Error("JWT_SECRET not defined");
-  
-return jwt.sign({ _id: this._id}, process.env.JWT_SECRET, {
-    expiresIn: "3d",
-  });
 
+  return jwt.sign(
+    { _id: this._id, email: this.email },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "3d",
+    }
+  );
 };
 
 export const User = mongoose.model("User", schema);

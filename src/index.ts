@@ -10,5 +10,7 @@ const NODE_ENV = process.env.NODE_ENV || "development";
 connectDB();
 
 app.listen(PORT, () => {
-  console.log(`server listening on port: ${PORT}, in ${NODE_ENV} mode`);
+  console.log(
+    `server listening on port: ${process.env.PORT}, in ${process.env.NODE_ENV} mode`
+  );
 });

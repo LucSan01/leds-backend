@@ -2,10 +2,11 @@ import { UserDocument } from "../models/User"; // ✅ Adjust path to your actual
 import { Document } from "mongoose"
 
 
-export interface AllUsers {  firstName: string;
+export interface AllUsers {
+  firstName: string;
   lastName: string;
   email: string;
-  phoneNo: number;
+  phoneNo: string;
   password: string;
   role: "admin" | "user" | "guest";
   otp?: Number;
@@ -13,9 +14,9 @@ export interface AllUsers {  firstName: string;
 }
 
 // interface for methods
-export interface UserMethods{
+export interface UserMethods {
   comparePassword(enteredPAssword: string): Promise<boolean>;
-  generateToken()
+  generateToken(): string;
 }
 
 // user.d.ts

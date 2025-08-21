@@ -6,33 +6,29 @@ config({
 import express, { Response, Request, NextFunction } from "express";
 import { errorHandlerFunc } from "./middleware/errorHandler";
 import cookieParser from "cookie-parser";
+import cors, { CorsOptions } from "cors";
 
 export const app = express();
 
-const allowedOrigins = [
-  "https://leds-gray.vercel.app",
-  "http://localhost:3000",
-];
+const allowedOrigins =
+  process.env.NODE_ENV === "production"
+    ? [process.env.FRONTEND_PROD!]
+    : [process.env.FRONTEND_DEV!];
 
-app.use((req: Request, res: Response, next: NextFunction): void => {
-  const origin = req.headers.origin || "unknown origin";
-  console.log("incoming request origin", req.headers.origin);
-
-  if (origin && allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-  }
-
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, x-Requested-With");
-  res.header("Access-Control-Allow-Credentials", "true");
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-  }
-
-  next();
-});
-
-
+const corsOptions: CorsOptions = {
+  origin: allowedOrigins,
+  credentials: true,
+  // origin: (origin, callback) => {
+  //   if (!origin || allowedOrigins.includes(origin)) {
+  //     callback(null, true);
+  //   } else {
+  //     callback(new Error(`Not allowed by CORS`));
+  //   }
+  // },
+};
+app.use(cors(corsOptions));
+// Preflight for all routes
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
