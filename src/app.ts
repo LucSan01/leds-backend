@@ -35,6 +35,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // user routes
+
+app.get("/", (req, res) => {
+  res.send("Welcome to LEDS API");
+});
+
 import user from "./routes/user";
 
 app.use("/api/user", user);
