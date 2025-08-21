@@ -13,18 +13,22 @@ import cors from "cors";
 
 const allowedOrigins = ['https://leds-gray.vercel.app', 'http://localhost:3000'];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      // Allow requests without origin or from allowedOrigins
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}));
-
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        // Allow requests without origin or from allowedOrigins
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+app.options("*", cors());
 // app.use(cors(corsOptions));
 // // Preflight for all routes
 // app.options("*", cors(corsOptions));
